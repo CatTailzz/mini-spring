@@ -1,10 +1,7 @@
 package com.cattail.springframework.beans.factory;
 
 import com.cattail.springframework.beans.BeansException;
-import com.cattail.springframework.beans.factory.config.BeanDefinition;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @description: 定义bean工厂接口
@@ -23,4 +20,12 @@ public interface BeanFactory {
     Object getBean(String name) throws BeansException;
 
 
+    /**
+     * 有参构造的bean实例对象
+     * @param name
+     * @param args
+     * @return
+     * @throws BeansException
+     */
+    Object getBean(String name, Object... args) throws BeansException;
 }

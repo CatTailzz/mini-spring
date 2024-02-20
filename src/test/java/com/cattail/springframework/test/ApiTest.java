@@ -23,7 +23,7 @@ public class ApiTest {
         BeanDefinition beanDefinition = new BeanDefinition(UserService.class);
         beanFactory.registerBeanDefinition("userService", beanDefinition);
         // 3.第一次获取bean
-        UserService userService = (UserService) beanFactory.getBean("userService");
+        UserService userService = (UserService) beanFactory.getBean("userService", "zsj");
         userService.queryUserInfo();
         // 4.第二次获取bean from singleton
         UserService userService_singleton = (UserService) beanFactory.getBean("userService");
