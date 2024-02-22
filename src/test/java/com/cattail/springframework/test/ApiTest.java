@@ -1,13 +1,22 @@
 package com.cattail.springframework.test;
 
+import cn.hutool.core.io.IoUtil;
 import com.cattail.springframework.beans.PropertyValue;
 import com.cattail.springframework.beans.PropertyValues;
 import com.cattail.springframework.beans.factory.config.BeanDefinition;
 import com.cattail.springframework.beans.factory.config.BeanReference;
+import com.cattail.springframework.beans.factory.support.BeanDefinitionRegistry;
 import com.cattail.springframework.beans.factory.support.DefaultListableBeanFactory;
+import com.cattail.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import com.cattail.springframework.core.io.DefaultResourceLoader;
+import com.cattail.springframework.core.io.Resource;
 import com.cattail.springframework.test.bean.UserDao;
 import com.cattail.springframework.test.bean.UserService;
+import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 
 /**
@@ -45,5 +54,48 @@ public class ApiTest {
 //       userService_singleton.queryUserInfo();
     }
 
+    private DefaultResourceLoader resourceLoader;
+
+    @Before
+    public void init() {
+        resourceLoader = new DefaultResourceLoader();
+    }
+
+    @Test
+    public void test_classpath() throws IOException {
+        Resource resource = resourceLoader.getResource("classpath:important.properties");
+        InputStream inputStream = resource.getInputStream();
+        String content = IoUtil.readUtf8(inputStream);
+        System.out.println(content);
+    }
+
+    @Test
+    public void test_file() throws IOException {
+        Resource resource = resourceLoader.getResource("src/test/resources/important.properties");
+        InputStream inputStream = resource.getInputStream();
+        String content = IoUtil.readUtf8(inputStream);
+        System.out.println(content);
+    }
+
+    @Test
+    public void test_url() throws IOException {
+        Resource resource = resourceLoader.getResource("https://github.com/CatTailzz/mini-spring/tree/main/src/main/resources/important.properties");
+        InputStream inputStream = resource.getInputStream();
+        String content = IoUtil.readUtf8(inputStream);
+        System.out.println(content);
+    }
+
+    @Test
+    public void test_xml() {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+
+        XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
+        reader.loadBeanDefinitions("classpath:spring.xml");
+
+        UserService userService = beanFactory.getBean("userService", UserService.class);
+        userService.queryUserInfo();
+
+
+    }
 
 }
