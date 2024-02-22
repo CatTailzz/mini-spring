@@ -1,6 +1,7 @@
 package com.cattail.springframework.beans.factory.support;
 
 import com.cattail.springframework.beans.BeansException;
+import com.cattail.springframework.beans.factory.ConfigurableListableBeanFactory;
 import com.cattail.springframework.beans.factory.config.BeanDefinition;
 
 import java.util.HashMap;
@@ -12,7 +13,7 @@ import java.util.Map;
  * @date: 2024/2/19
  * @Copyright: https://github.com/CatTailzz
  */
-public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory implements BeanDefinitionRegistry {
+public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory implements BeanDefinitionRegistry, ConfigurableListableBeanFactory {
 
     private Map<String, BeanDefinition> beanDefinitionMap = new HashMap<>();
 
@@ -23,6 +24,11 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
             throw new BeansException("No bean named '" + beanName + "' is defined");
         }
         return beanDefinition;
+    }
+
+    @Override
+    public void preInstantiateSingletons() throws BeansException {
+        beanDefinitionMap.keySet().forEach(this::getBean);
     }
 
     @Override
@@ -45,6 +51,18 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
     @Override
     public boolean containsBeanDefinition(String beanName) {
         return beanDefinitionMap.containsKey(beanName);
+    }
+
+    @Override
+    public <T> Map<String, T> getBeansOfType(Class<T> type) throws BeansException {
+        Map<String, T> result = new HashMap<>();
+        beanDefinitionMap.forEach((beanName, beanDefinition) -> {
+            Class beanClass = beanDefinition.getBeanClass();
+            if (type.isAssignableFrom(beanClass)) {
+                result.put(beanName, (T) getBean(beanName));
+            }
+        });
+        return result;
     }
 
     @Override

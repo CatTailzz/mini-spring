@@ -3,6 +3,11 @@ package com.cattail.springframework.beans.factory.support;
 import com.cattail.springframework.beans.BeansException;
 import com.cattail.springframework.beans.factory.BeanFactory;
 import com.cattail.springframework.beans.factory.config.BeanDefinition;
+import com.cattail.springframework.beans.factory.config.BeanPostProcessor;
+import com.cattail.springframework.beans.factory.config.ConfigurableBeanFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @description: 抽象的bean工厂基类，定义模板方法
@@ -10,7 +15,9 @@ import com.cattail.springframework.beans.factory.config.BeanDefinition;
  * @date: 2024/2/19
  * @Copyright: https://github.com/CatTailzz
  */
-public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory {
+public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements ConfigurableBeanFactory {
+
+    private final List<BeanPostProcessor> beanPostProcessors = new ArrayList<BeanPostProcessor>();
 
     @Override
     public Object getBean(String name) throws BeansException {
@@ -41,4 +48,13 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
 
     protected abstract Object createBean(String name, BeanDefinition beanDefinition, Object[] args);
 
+    @Override
+    public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor) {
+        this.beanPostProcessors.remove(beanPostProcessor);
+        this.beanPostProcessors.add(beanPostProcessor);
+    }
+
+    public List<BeanPostProcessor> getBeanPostProcessors() {
+        return this.beanPostProcessors;
+    }
 }
