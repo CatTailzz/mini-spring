@@ -7,7 +7,6 @@ import com.cattail.springframework.beans.PropertyValue;
 import com.cattail.springframework.beans.factory.config.BeanDefinition;
 import com.cattail.springframework.beans.factory.config.BeanReference;
 import com.cattail.springframework.beans.factory.support.AbstractBeanDefinitionReader;
-import com.cattail.springframework.beans.factory.support.BeanDefinitionReader;
 import com.cattail.springframework.beans.factory.support.BeanDefinitionRegistry;
 import com.cattail.springframework.core.io.Resource;
 import com.cattail.springframework.core.io.ResourceLoader;
@@ -19,7 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * @description:
+ * @description: XML形式的bean定义reader
  * @author：CatTail
  * @date: 2024/2/21
  * @Copyright: https://github.com/CatTailzz
@@ -88,6 +87,9 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
             String id = bean.getAttribute("id");
             String name = bean.getAttribute("name");
             String className = bean.getAttribute("class");
+            //新增对初始化、销毁方法名的读取
+            String initMethodName = bean.getAttribute("init-method");
+            String destroyMethodName = bean.getAttribute("destroy-method");
             //获取class
             Class<?> clazz = Class.forName(className);
             // id 优先级大于 name
@@ -99,6 +101,11 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
             // 定义Bean
             BeanDefinition beanDefinition = new BeanDefinition(clazz);
+
+            //额外设置到beanDefinition中
+            beanDefinition.setInitMethodName(initMethodName);
+            beanDefinition.setDestroyMethodName(destroyMethodName);
+
             for (int j = 0; j < bean.getChildNodes().getLength(); j++) {
                 if (!(bean.getChildNodes().item(j) instanceof Element)) {
                     continue;

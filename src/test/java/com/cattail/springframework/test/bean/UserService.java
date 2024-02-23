@@ -1,12 +1,16 @@
 package com.cattail.springframework.test.bean;
 
+import com.cattail.springframework.beans.BeansException;
+import com.cattail.springframework.beans.factory.DisposableBean;
+import com.cattail.springframework.beans.factory.InitializingBean;
+
 /**
  * @description:
  * @author：CatTail
  * @date: 2024/2/19
  * @Copyright: https://github.com/CatTailzz
  */
-public class UserService {
+public class UserService implements InitializingBean, DisposableBean {
 
     private String uId;
 
@@ -50,5 +54,15 @@ public class UserService {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    @Override
+    public void destory() throws Exception {
+        System.out.println("执行UserService.destroy");
+    }
+
+    @Override
+    public void afterPropertiesSet() throws BeansException {
+        System.out.println("执行UserService.afterPropertiesSet");
     }
 }

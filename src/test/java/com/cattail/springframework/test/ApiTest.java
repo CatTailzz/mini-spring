@@ -20,6 +20,7 @@ import com.cattail.springframework.test.common.MyBeanPostProcessor;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.jws.soap.SOAPBinding;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -131,6 +132,16 @@ public class ApiTest {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:springPostProcessor.xml");
 
         // 2. 获取Bean对象调用方法
+        UserService userService = applicationContext.getBean("userService", UserService.class);
+        String result = userService.queryUserInfo();
+        System.out.println(result);
+    }
+
+    @Test
+    public void test_xml3(){
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
+        applicationContext.registerShutdownHook();
+
         UserService userService = applicationContext.getBean("userService", UserService.class);
         String result = userService.queryUserInfo();
         System.out.println(result);

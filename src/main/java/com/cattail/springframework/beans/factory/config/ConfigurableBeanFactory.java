@@ -15,4 +15,9 @@ public interface ConfigurableBeanFactory extends HierarchicaBeanFactory, Singlet
     String SCOPE_PROTOTYPE = "prototype";
 
     void addBeanPostProcessor(BeanPostProcessor beanPostProcessor);
+
+    /**
+     * 销毁单例对象
+     */
+    void destroySingletons();
 }
