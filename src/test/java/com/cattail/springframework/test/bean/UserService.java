@@ -1,8 +1,9 @@
 package com.cattail.springframework.test.bean;
 
 import com.cattail.springframework.beans.BeansException;
-import com.cattail.springframework.beans.factory.DisposableBean;
-import com.cattail.springframework.beans.factory.InitializingBean;
+import com.cattail.springframework.beans.factory.*;
+import com.cattail.springframework.context.ApplicationContext;
+import com.cattail.springframework.context.ApplicationContextAware;
 
 /**
  * @description:
@@ -10,7 +11,10 @@ import com.cattail.springframework.beans.factory.InitializingBean;
  * @date: 2024/2/19
  * @Copyright: https://github.com/CatTailzz
  */
-public class UserService implements InitializingBean, DisposableBean {
+public class UserService implements BeanNameAware, BeanClassLoaderAware, ApplicationContextAware, BeanFactoryAware {
+
+    private ApplicationContext applicationContext;
+    private BeanFactory beanFactory;
 
     private String uId;
 
@@ -56,13 +60,41 @@ public class UserService implements InitializingBean, DisposableBean {
         this.location = location;
     }
 
-    @Override
-    public void destory() throws Exception {
-        System.out.println("执行UserService.destroy");
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
+
+    public BeanFactory getBeanFactory() {
+        return beanFactory;
     }
 
     @Override
-    public void afterPropertiesSet() throws BeansException {
-        System.out.println("执行UserService.afterPropertiesSet");
+    public void setBeanClassLoader(ClassLoader classLoader) {
+        System.out.println("ClassLoader:" + classLoader);
     }
+
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        this.beanFactory = beanFactory;
+    }
+
+    @Override
+    public void setBeanName(String name) {
+        System.out.println("Bean Name is:" + name);
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
+//    @Override
+//    public void destory() throws Exception {
+//        System.out.println("执行UserService.destroy");
+//    }
+//
+//    @Override
+//    public void afterPropertiesSet() throws BeansException {
+//        System.out.println("执行UserService.afterPropertiesSet");
+//    }
 }

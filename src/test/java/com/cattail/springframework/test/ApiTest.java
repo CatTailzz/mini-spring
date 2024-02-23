@@ -145,6 +145,8 @@ public class ApiTest {
         UserService userService = applicationContext.getBean("userService", UserService.class);
         String result = userService.queryUserInfo();
         System.out.println(result);
+        System.out.println("ApplicationContextAware:" + userService.getApplicationContext());
+        System.out.println("BeanFactoryAware:" + userService.getBeanFactory());
     }
 
 }
