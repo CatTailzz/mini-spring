@@ -11,14 +11,14 @@ import com.cattail.springframework.context.ApplicationContextAware;
  * @date: 2024/2/19
  * @Copyright: https://github.com/CatTailzz
  */
-public class UserService implements BeanNameAware, BeanClassLoaderAware, ApplicationContextAware, BeanFactoryAware {
+public class UserService {
 
-    private ApplicationContext applicationContext;
-    private BeanFactory beanFactory;
+//    private ApplicationContext applicationContext;
+//    private BeanFactory beanFactory;
 
     private String uId;
 
-    private UserDao userDao;
+    private IUserDao userDao;
 
     private String company;
 
@@ -36,11 +36,11 @@ public class UserService implements BeanNameAware, BeanClassLoaderAware, Applica
         this.uId = uId;
     }
 
-    public UserDao getUserDao() {
+    public IUserDao getUserDao() {
         return userDao;
     }
 
-    public void setUserDao(UserDao userDao) {
+    public void setUserDao(IUserDao userDao) {
         this.userDao = userDao;
     }
 
@@ -60,33 +60,33 @@ public class UserService implements BeanNameAware, BeanClassLoaderAware, Applica
         this.location = location;
     }
 
-    public ApplicationContext getApplicationContext() {
-        return applicationContext;
-    }
-
-    public BeanFactory getBeanFactory() {
-        return beanFactory;
-    }
-
-    @Override
-    public void setBeanClassLoader(ClassLoader classLoader) {
-        System.out.println("ClassLoader:" + classLoader);
-    }
-
-    @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = beanFactory;
-    }
-
-    @Override
-    public void setBeanName(String name) {
-        System.out.println("Bean Name is:" + name);
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
+//    public ApplicationContext getApplicationContext() {
+//        return applicationContext;
+//    }
+//
+//    public BeanFactory getBeanFactory() {
+//        return beanFactory;
+//    }
+//
+//    @Override
+//    public void setBeanClassLoader(ClassLoader classLoader) {
+//        System.out.println("ClassLoader:" + classLoader);
+//    }
+//
+//    @Override
+//    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+//        this.beanFactory = beanFactory;
+//    }
+//
+//    @Override
+//    public void setBeanName(String name) {
+//        System.out.println("Bean Name is:" + name);
+//    }
+//
+//    @Override
+//    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+//        this.applicationContext = applicationContext;
+//    }
 
 //    @Override
 //    public void destory() throws Exception {

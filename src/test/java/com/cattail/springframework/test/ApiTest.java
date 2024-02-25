@@ -19,6 +19,7 @@ import com.cattail.springframework.test.common.MyBeanFactoryPostProcessor;
 import com.cattail.springframework.test.common.MyBeanPostProcessor;
 import org.junit.Before;
 import org.junit.Test;
+import org.openjdk.jol.info.ClassLayout;
 
 import javax.jws.soap.SOAPBinding;
 import java.io.IOException;
@@ -145,8 +146,33 @@ public class ApiTest {
         UserService userService = applicationContext.getBean("userService", UserService.class);
         String result = userService.queryUserInfo();
         System.out.println(result);
-        System.out.println("ApplicationContextAware:" + userService.getApplicationContext());
-        System.out.println("BeanFactoryAware:" + userService.getBeanFactory());
+//        System.out.println("ApplicationContextAware:" + userService.getApplicationContext());
+//        System.out.println("BeanFactoryAware:" + userService.getBeanFactory());
+    }
+
+    @Test
+    public void test_prototype() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
+        applicationContext.registerShutdownHook();
+
+        UserService userService01 = applicationContext.getBean("userService", UserService.class);
+        UserService userService02 = applicationContext.getBean("userService", UserService.class);
+
+        System.out.println(userService01);
+        System.out.println(userService02);
+
+        System.out.println(userService01 + "十六进制哈希：" + Integer.toHexString(userService01.hashCode()));
+        System.out.println(ClassLayout.parseInstance(userService01).toPrintable());
+
+    }
+
+    @Test
+    public void test_factory_bean() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
+        applicationContext.registerShutdownHook();
+
+        UserService userService = applicationContext.getBean("userService", UserService.class);
+        System.out.println(userService.queryUserInfo());
     }
 
 }

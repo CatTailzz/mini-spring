@@ -90,6 +90,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
             //新增对初始化、销毁方法名的读取
             String initMethodName = bean.getAttribute("init-method");
             String destroyMethodName = bean.getAttribute("destroy-method");
+            //新增scope
+            String beanScope = bean.getAttribute("scope");
             //获取class
             Class<?> clazz = Class.forName(className);
             // id 优先级大于 name
@@ -105,6 +107,11 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
             //额外设置到beanDefinition中
             beanDefinition.setInitMethodName(initMethodName);
             beanDefinition.setDestroyMethodName(destroyMethodName);
+
+            //设置scope属性
+            if (StrUtil.isNotEmpty(beanScope)) {
+                beanDefinition.setScope(beanScope);
+            }
 
             for (int j = 0; j < bean.getChildNodes().getLength(); j++) {
                 if (!(bean.getChildNodes().item(j) instanceof Element)) {

@@ -9,12 +9,14 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @description: 通用的注册表,管理注册和销毁
+ * @description: 通用的单例注册表,管理注册和销毁
  * @author：CatTail
  * @date: 2024/2/19
  * @Copyright: https://github.com/CatTailzz
  */
 public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
+
+    protected static final Object NULL_OBJECT = new Object();
 
     private Map<String, Object> singletonObjects = new HashMap<>();
 
