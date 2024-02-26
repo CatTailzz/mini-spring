@@ -3,13 +3,20 @@
 
 <!--    <bean id="userDao" class="com.cattail.springframework.test.bean.UserDao" init-method="initDataMethod" destroy-method="destroyDataMethod"/>-->
 
-    <bean id="userService" class="com.cattail.springframework.test.bean.UserService" scope="prototype">
-        <property name="uId" value="1001"/>
-        <property name="company" value="腾讯"/>
-        <property name="location" value="深圳"/>
-        <property name="userDao" ref="proxyUserDao"/>
-    </bean>
+<!--    <bean id="userService" class="com.cattail.springframework.test.bean.UserService" scope="prototype">-->
+<!--        <property name="uId" value="1001"/>-->
+<!--        <property name="company" value="腾讯"/>-->
+<!--        <property name="location" value="深圳"/>-->
+<!--        <property name="userDao" ref="proxyUserDao"/>-->
+<!--    </bean>-->
 
-    <bean id="proxyUserDao" class="com.cattail.springframework.test.bean.ProxyBeanFactory"/>
+<!--    <bean id="proxyUserDao" class="com.cattail.springframework.test.bean.ProxyBeanFactory"/>-->
+
+    <bean class="com.cattail.springframework.test.event.ContextClosedEventListener"/>
+
+    <bean class="com.cattail.springframework.test.event.ContextRefreshedEventListener"/>
+
+    <bean class="com.cattail.springframework.test.event.CustomEventListener"/>
+
 
 </beans>
