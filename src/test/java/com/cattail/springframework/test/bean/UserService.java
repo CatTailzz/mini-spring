@@ -5,13 +5,15 @@ import com.cattail.springframework.beans.factory.*;
 import com.cattail.springframework.context.ApplicationContext;
 import com.cattail.springframework.context.ApplicationContextAware;
 
+import java.util.Random;
+
 /**
  * @description:
  * @author：CatTail
  * @date: 2024/2/19
  * @Copyright: https://github.com/CatTailzz
  */
-public class UserService {
+public class UserService implements IUserService{
 
 //    private ApplicationContext applicationContext;
 //    private BeanFactory beanFactory;
@@ -25,7 +27,22 @@ public class UserService {
     private String location;
 
     public String queryUserInfo(){
-        return userDao.queryUserName(uId) + ",公司：" + company + "，地点" + location;
+        try {
+            Thread.sleep(new Random(1).nextInt(100));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return "zsj,1001,local";
+    }
+
+    @Override
+    public String register(String userName) {
+        try {
+            Thread.sleep(new Random(1).nextInt(100));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return userName + "注册成功！";
     }
 
     public String getuId() {

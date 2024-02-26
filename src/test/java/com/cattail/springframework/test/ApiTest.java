@@ -1,6 +1,11 @@
 package com.cattail.springframework.test;
 
 import cn.hutool.core.io.IoUtil;
+import com.cattail.springframework.aop.AdvisedSupport;
+import com.cattail.springframework.aop.TargetSource;
+import com.cattail.springframework.aop.aspectj.AspectJExpressionPointcut;
+import com.cattail.springframework.aop.framework.Cglib2AopProxy;
+import com.cattail.springframework.aop.framework.JdkDynamicAopProxy;
 import com.cattail.springframework.beans.PropertyValue;
 import com.cattail.springframework.beans.PropertyValues;
 import com.cattail.springframework.beans.factory.BeanFactory;
@@ -13,8 +18,10 @@ import com.cattail.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import com.cattail.springframework.context.support.ClassPathXmlApplicationContext;
 import com.cattail.springframework.core.io.DefaultResourceLoader;
 import com.cattail.springframework.core.io.Resource;
+import com.cattail.springframework.test.bean.IUserService;
 import com.cattail.springframework.test.bean.UserDao;
 import com.cattail.springframework.test.bean.UserService;
+import com.cattail.springframework.test.bean.UserServiceInterceptor;
 import com.cattail.springframework.test.common.MyBeanFactoryPostProcessor;
 import com.cattail.springframework.test.common.MyBeanPostProcessor;
 import com.cattail.springframework.test.event.CustomEvent;
@@ -25,6 +32,7 @@ import org.openjdk.jol.info.ClassLayout;
 import javax.jws.soap.SOAPBinding;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 
 
 /**
@@ -183,4 +191,31 @@ public class ApiTest {
         applicationContext.registerShutdownHook();
     }
 
+    @Test
+    public void test_aop() throws NoSuchMethodException {
+        AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut("execution(* com.cattail.springframework.test.bean.UserService.*(..))");
+        Class<UserService> clazz = UserService.class;
+        Method method = clazz.getDeclaredMethod("queryUserInfo");
+
+        System.out.println(pointcut.matches(clazz));
+        System.out.println(pointcut.matches(method, clazz));
+    }
+
+    @Test
+    public void test_dynamic() {
+        IUserService userService = new UserService();
+
+        //组装代理信息
+        AdvisedSupport advisedSupport = new AdvisedSupport();
+        advisedSupport.setTargetSource(new TargetSource(userService));
+        advisedSupport.setMethodInterceptor(new UserServiceInterceptor());
+        advisedSupport.setMethodMatcher(new AspectJExpressionPointcut("execution(* com.cattail.springframework.test.bean.IUserService.*(..))"));
+
+        IUserService proxy_jdk = (IUserService) new JdkDynamicAopProxy(advisedSupport).getProxy();
+        System.out.println(proxy_jdk.queryUserInfo());
+
+        IUserService proxy_cglib = (IUserService) new Cglib2AopProxy(advisedSupport).getProxy();
+        System.out.println(proxy_cglib.register("哈哈"));
+
+    }
 }
