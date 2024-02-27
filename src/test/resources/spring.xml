@@ -12,11 +12,25 @@
 
 <!--    <bean id="proxyUserDao" class="com.cattail.springframework.test.bean.ProxyBeanFactory"/>-->
 
-    <bean class="com.cattail.springframework.test.event.ContextClosedEventListener"/>
+<!--    <bean class="com.cattail.springframework.test.event.ContextClosedEventListener"/>-->
 
-    <bean class="com.cattail.springframework.test.event.ContextRefreshedEventListener"/>
+<!--    <bean class="com.cattail.springframework.test.event.ContextRefreshedEventListener"/>-->
 
-    <bean class="com.cattail.springframework.test.event.CustomEventListener"/>
+<!--    <bean class="com.cattail.springframework.test.event.CustomEventListener"/>-->
 
+    <bean id="userService" class="com.cattail.springframework.test.bean.UserService"/>
+
+    <bean class="com.cattail.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
+
+    <bean id="beforeAdvice" class="com.cattail.springframework.test.bean.UserServiceBeforeAdvice"/>
+
+    <bean id="methodInterceptor" class="com.cattail.springframework.aop.framework.adapter.MethodBeforeAdviceInterceptor">
+        <property name="advice" ref="beforeAdvice"/>
+    </bean>
+
+    <bean id="pointcutAdvisor" class="com.cattail.springframework.aop.aspectj.AspectJExpressionPonitcutAdvisor">
+        <property name="expression" value="execution(* com.cattail.springframework.test.bean.IUserService.*(..))"/>
+        <property name="advice" ref="methodInterceptor"/>
+    </bean>
 
 </beans>
