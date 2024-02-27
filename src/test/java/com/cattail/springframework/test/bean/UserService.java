@@ -4,6 +4,7 @@ import com.cattail.springframework.beans.BeansException;
 import com.cattail.springframework.beans.factory.*;
 import com.cattail.springframework.context.ApplicationContext;
 import com.cattail.springframework.context.ApplicationContextAware;
+import com.cattail.springframework.stereotype.Component;
 
 import java.util.Random;
 
@@ -13,6 +14,7 @@ import java.util.Random;
  * @date: 2024/2/19
  * @Copyright: https://github.com/CatTailzz
  */
+@Component("userService")
 public class UserService implements IUserService{
 
 //    private ApplicationContext applicationContext;
@@ -25,6 +27,8 @@ public class UserService implements IUserService{
     private String company;
 
     private String location;
+
+    private String token;
 
     public String queryUserInfo(){
         try {
@@ -43,6 +47,19 @@ public class UserService implements IUserService{
             e.printStackTrace();
         }
         return userName + "注册成功！";
+    }
+
+    @Override
+    public String toString() {
+        return "UserService#token = { " + token + " }";
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getuId() {

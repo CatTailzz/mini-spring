@@ -15,6 +15,7 @@ import com.cattail.springframework.beans.factory.config.BeanReference;
 import com.cattail.springframework.beans.factory.support.BeanDefinitionRegistry;
 import com.cattail.springframework.beans.factory.support.DefaultListableBeanFactory;
 import com.cattail.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import com.cattail.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import com.cattail.springframework.context.support.ClassPathXmlApplicationContext;
 import com.cattail.springframework.core.io.DefaultResourceLoader;
 import com.cattail.springframework.core.io.Resource;
@@ -222,6 +223,20 @@ public class ApiTest {
     @Test
     public void test_aop2() {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
+        IUserService userService = applicationContext.getBean("userService", IUserService.class);
+        System.out.println(userService.queryUserInfo());
+    }
+
+    @Test
+    public void test_property() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring-property.xml");
+        IUserService userService = applicationContext.getBean("userService", IUserService.class);
+        System.out.println(userService);
+    }
+
+    @Test
+    public void test_scan() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring-scan.xml");
         IUserService userService = applicationContext.getBean("userService", IUserService.class);
         System.out.println(userService.queryUserInfo());
     }
