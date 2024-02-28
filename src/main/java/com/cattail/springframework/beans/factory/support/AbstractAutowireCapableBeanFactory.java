@@ -32,6 +32,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             }
             // 实例化Bean
             bean = createBeanInstance(beanDefinition, beanName, args);
+            // 实例化后判断
+            boolean continueWithPropertyPopulation = applyBeanPostProcessorsAfterInitialization(beanName, bean);
+            if (!continueWithPropertyPopulation) {
+                return bean;
+            }
             // 在Bean设置属性前，允许BeanPostProcessor修改属性值
             applyBeanPostProcessorsBeforeApplyingPropertyValues(beanName, bean, beanDefinition);
             // 为Bean填充属性
@@ -49,6 +54,20 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             registerSingleton(beanName, bean);
         }
         return bean;
+    }
+
+    private boolean applyBeanPostProcessorsAfterInitialization(String beanName, Object bean) {
+        boolean continueWithPropertyPopulation = true;
+        for (BeanPostProcessor beanPostProcessor : getBeanPostProcessors()) {
+            if (beanPostProcessor instanceof InstantiationAwareBeanPostProcessor) {
+                InstantiationAwareBeanPostProcessor instantiationAwareBeanPostProcessor = (InstantiationAwareBeanPostProcessor) beanPostProcessor;
+                if (!instantiationAwareBeanPostProcessor.postProcessAfterInstantiation(bean, beanName)) {
+                    continueWithPropertyPopulation = false;
+                    break;
+                }
+            }
+        }
+        return continueWithPropertyPopulation;
     }
 
     /**
@@ -108,13 +127,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
         // 2.执行Bean对象的初始化方法
         try {
-            invokeInitMethods(beanName, bean, beanDefinition);
+            invokeInitMethods(beanName, wrappedBean, beanDefinition);
         } catch (Exception e) {
             throw new BeansException("Invocation of init method of bean[" + beanName + "] failed", e);
         }
 
         // 3.执行BeanPostProcessor After处理
-        wrappedBean = applyBeanPostProcessorsAfterInitialization(bean, beanName);
+        wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
         return wrappedBean;
 
     }

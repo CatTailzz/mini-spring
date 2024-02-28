@@ -16,7 +16,7 @@ import java.util.Random;
  * @date: 2024/2/19
  * @Copyright: https://github.com/CatTailzz
  */
-@Component("userService")
+
 public class UserService implements IUserService{
 
 //    private ApplicationContext applicationContext;
@@ -24,14 +24,12 @@ public class UserService implements IUserService{
 
     private String uId;
 
-    @Autowired
     private UserDao userDao;
 
     private String company;
 
     private String location;
 
-    @Value("${token}")
     private String token;
 
     public String queryUserInfo(){
@@ -40,7 +38,7 @@ public class UserService implements IUserService{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return userDao.queryUserName("1001") + "." + token;
+        return "zsj,1001" + token;
     }
 
     @Override

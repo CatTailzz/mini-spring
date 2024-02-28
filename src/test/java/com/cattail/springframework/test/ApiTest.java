@@ -248,4 +248,11 @@ public class ApiTest {
         System.out.println(userService.queryUserInfo());
     }
 
+    @Test
+    public void test_autoProxy() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring-autoProxy.xml");
+        IUserService userService = applicationContext.getBean("userService", IUserService.class);
+        System.out.println(userService.queryUserInfo());
+    }
+
 }
