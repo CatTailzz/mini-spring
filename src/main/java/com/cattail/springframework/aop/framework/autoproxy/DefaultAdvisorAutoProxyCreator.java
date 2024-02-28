@@ -1,7 +1,7 @@
 package com.cattail.springframework.aop.framework.autoproxy;
 
 import com.cattail.springframework.aop.*;
-import com.cattail.springframework.aop.aspectj.AspectJExpressionPonitcutAdvisor;
+import com.cattail.springframework.aop.aspectj.AspectJExpressionPointcutAdvisor;
 import com.cattail.springframework.aop.framework.ProxyFactory;
 import com.cattail.springframework.beans.BeansException;
 import com.cattail.springframework.beans.PropertyValues;
@@ -13,6 +13,9 @@ import org.aopalliance.aop.Advice;
 import org.aopalliance.intercept.MethodInterceptor;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @description:
@@ -23,6 +26,8 @@ import java.util.Collection;
 public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPostProcessor, BeanFactoryAware {
 
     private DefaultListableBeanFactory beanFactory;
+
+    private final Set<Object> earlyProxyReferences = Collections.synchronizedSet(new HashSet<>());
 
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
@@ -55,16 +60,15 @@ public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPos
         return bean;
     }
 
-    @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+    protected Object wrapIfNecessary(Object bean, String beanName) {
         //如果是aop基础设施类，则不做处理
         if (isInfrastructureClass(bean.getClass())) {
             return bean;
         }
 
-        Collection<AspectJExpressionPonitcutAdvisor> advisors = beanFactory.getBeansOfType(AspectJExpressionPonitcutAdvisor.class).values();
+        Collection<AspectJExpressionPointcutAdvisor> advisors = beanFactory.getBeansOfType(AspectJExpressionPointcutAdvisor.class).values();
 
-        for (AspectJExpressionPonitcutAdvisor advisor : advisors) {
+        for (AspectJExpressionPointcutAdvisor advisor : advisors) {
             ClassFilter classFilter = advisor.getPointcut().getClassFilter();
             if (!classFilter.matches(bean.getClass())) {
                 continue;
@@ -76,11 +80,24 @@ public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPos
             advisedSupport.setTargetSource(targetSource);
             advisedSupport.setMethodInterceptor((MethodInterceptor) advisor.getAdvice());
             advisedSupport.setMethodMatcher(advisor.getPointcut().getMethodMatcher());
-            advisedSupport.setProxyTargetClass(false);
+            advisedSupport.setProxyTargetClass(true);
 
             return new ProxyFactory(advisedSupport).getProxy();
         }
         return bean;
     }
 
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        if (!earlyProxyReferences.contains(beanName)) {
+            return wrapIfNecessary(bean, beanName);
+        }
+        return bean;
+    }
+
+    @Override
+    public Object getEarlyBeanReference(Object bean, String beanName) {
+        earlyProxyReferences.add(beanName);
+        return wrapIfNecessary(bean, beanName);
+    }
 }

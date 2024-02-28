@@ -10,7 +10,7 @@ import org.aopalliance.aop.Advice;
  * @date: 2024/2/27
  * @Copyright: https://github.com/CatTailzz
  */
-public class AspectJExpressionPonitcutAdvisor implements PointcutAdvisor {
+public class AspectJExpressionPointcutAdvisor implements PointcutAdvisor {
 
     //切面
     private AspectJExpressionPointcut pointcut;

@@ -19,10 +19,7 @@ import com.cattail.springframework.context.annotation.ClassPathBeanDefinitionSca
 import com.cattail.springframework.context.support.ClassPathXmlApplicationContext;
 import com.cattail.springframework.core.io.DefaultResourceLoader;
 import com.cattail.springframework.core.io.Resource;
-import com.cattail.springframework.test.bean.IUserService;
-import com.cattail.springframework.test.bean.UserDao;
-import com.cattail.springframework.test.bean.UserService;
-import com.cattail.springframework.test.bean.UserServiceInterceptor;
+import com.cattail.springframework.test.bean.*;
 import com.cattail.springframework.test.common.MyBeanFactoryPostProcessor;
 import com.cattail.springframework.test.common.MyBeanPostProcessor;
 import com.cattail.springframework.test.event.CustomEvent;
@@ -253,6 +250,15 @@ public class ApiTest {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring-autoProxy.xml");
         IUserService userService = applicationContext.getBean("userService", IUserService.class);
         System.out.println(userService.queryUserInfo());
+    }
+
+    @Test
+    public void test_circular() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring-circular.xml");
+        Husband husband = applicationContext.getBean("husband", Husband.class);
+        Wife wife = applicationContext.getBean("wife", Wife.class);
+        System.out.println(husband.queryWife());
+        System.out.println(wife.queryHusband());
     }
 
 }
