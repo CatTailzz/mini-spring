@@ -241,4 +241,11 @@ public class ApiTest {
         System.out.println(userService.queryUserInfo());
     }
 
+    @Test
+    public void test_scan2(){
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring-autowired.xml");
+        IUserService userService = applicationContext.getBean("userService", IUserService.class);
+        System.out.println(userService.queryUserInfo());
+    }
+
 }

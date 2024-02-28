@@ -4,6 +4,7 @@ import com.cattail.springframework.aop.*;
 import com.cattail.springframework.aop.aspectj.AspectJExpressionPonitcutAdvisor;
 import com.cattail.springframework.aop.framework.ProxyFactory;
 import com.cattail.springframework.beans.BeansException;
+import com.cattail.springframework.beans.PropertyValues;
 import com.cattail.springframework.beans.factory.BeanFactory;
 import com.cattail.springframework.beans.factory.BeanFactoryAware;
 import com.cattail.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor;
@@ -62,6 +63,11 @@ public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPos
 
         return null;
 
+    }
+
+    @Override
+    public PropertyValues postProcessPropertyValues(PropertyValues pvs, Object bean, String beanName) throws BeansException {
+        return pvs;
     }
 
     private boolean isInfrastructureClass(Class<?> beanClass) {

@@ -2,6 +2,8 @@ package com.cattail.springframework.test.bean;
 
 import com.cattail.springframework.beans.BeansException;
 import com.cattail.springframework.beans.factory.*;
+import com.cattail.springframework.beans.factory.annotation.Autowired;
+import com.cattail.springframework.beans.factory.annotation.Value;
 import com.cattail.springframework.context.ApplicationContext;
 import com.cattail.springframework.context.ApplicationContextAware;
 import com.cattail.springframework.stereotype.Component;
@@ -22,12 +24,14 @@ public class UserService implements IUserService{
 
     private String uId;
 
-    private IUserDao userDao;
+    @Autowired
+    private UserDao userDao;
 
     private String company;
 
     private String location;
 
+    @Value("${token}")
     private String token;
 
     public String queryUserInfo(){
@@ -36,7 +40,7 @@ public class UserService implements IUserService{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return "zsj,1001,local";
+        return userDao.queryUserName("1001") + "." + token;
     }
 
     @Override
@@ -70,11 +74,11 @@ public class UserService implements IUserService{
         this.uId = uId;
     }
 
-    public IUserDao getUserDao() {
+    public UserDao getUserDao() {
         return userDao;
     }
 
-    public void setUserDao(IUserDao userDao) {
+    public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
     }
 

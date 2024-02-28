@@ -1,6 +1,8 @@
 package com.cattail.springframework.beans.factory.config;
 
 import com.cattail.springframework.beans.BeansException;
+import com.cattail.springframework.beans.PropertyValue;
+import com.cattail.springframework.beans.PropertyValues;
 
 /**
  * @description:
@@ -19,4 +21,15 @@ public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor{
      * @throws BeansException
      */
     Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException;
+
+
+    /**
+     * 在Bean对象实例化完成后，设置属性操作之前执行此方法
+     * @param pvs
+     * @param bean
+     * @param beanName
+     * @return
+     * @throws BeansException
+     */
+    PropertyValues postProcessPropertyValues(PropertyValues pvs, Object bean, String beanName) throws BeansException;
 }
